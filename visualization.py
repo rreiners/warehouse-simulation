@@ -118,10 +118,10 @@ def draw_path(path):
             )
 
             screen.blit(
-                distances_surface, (50, WINDOW_HEIGHT - 80)
+                distances_surface, (50, WINDOW_HEIGHT - 50)
             )  # Adjust position as needed
             screen.blit(
-                total_distance_surface, (50, WINDOW_HEIGHT - 50)
+                total_distance_surface, (50, WINDOW_HEIGHT - 20)
             )  # Adjust position as needed
 
             pygame.display.flip()  # Update the display with text
