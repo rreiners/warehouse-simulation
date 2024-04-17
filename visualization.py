@@ -9,20 +9,21 @@ from simulation import (
 
 ## Assuming your warehouse_layout is a 2D list with the correct symbols for direction
 warehouse_layout = [
-    [">v", ">", ">", ">v", ">", ">", ">", "v"],
-    ["v", "X", "X", "v", "X", "X", "X", "v"],
-    ["v", "<", "<", "<v", "<", "<", "<", "<v"],
-    ["v", "X", "X", "v", "X", "X", "X", "v"],
-    ["v>", ">", ">", "v>", ">", ">", ">", ">v"],
-    ["X", "X", "X", "X", "X", "X", "X", "X"],
+    ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
+    ["X", ">v", ">", ">", ">v", ">", ">", ">", "v", "X"],
+    ["X", "v", "X", "X", "v", "X", "X", "X", "v", "X"],
+    ["X", "v", "<", "<", "<v", "<", "<", "<", "<v", "X"],
+    ["X", "v", "X", "X", "v", "X", "X", "X", "v", "X"],
+    ["X", "v>", ">", ">", "v>", ">", ">", ">", ">v", "X"],
+    ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
 ]
 
 warehouse = Warehouse(warehouse_layout)
-warehouse.set_start((0, 0))  # Set start location
-warehouse.set_printer((4, 7))  # Set printer location row 4 column 7
+warehouse.set_start((1, 1))  # Set start location
+warehouse.set_printer((5, 8))  # Set printer location row 4 column 7
 # Define item locations
-warehouse.add_item_location("Item1", (2, 2))
-warehouse.add_item_location("Item2", (4, 5))
+warehouse.add_item_location("Item1", (3, 3))
+warehouse.add_item_location("Item2", (5, 6))
 
 # Simulate order
 orders = ["Item1", "Item2"]  # List of items in the order
@@ -35,6 +36,8 @@ print(f"Total distance traveled: {total_distance}")
 # Initialize pygame
 pygame.init()
 
+pygame.font.init()  # Initialize the font module
+font = pygame.font.Font(None, 24)  # Choose the default font and set the size
 # Constants for the display
 CELL_SIZE = 60
 CELL_MARGIN = 2
@@ -105,11 +108,28 @@ def draw_path(path):
         pygame.draw.rect(screen, PICKER_COLOR, rect)
         pygame.display.flip()  # Update the display to show the new color
         if (row, col) == warehouse.printer:
-            # sleep for a while and then quit the game
-            time.sleep(2)
+            # Render and display distances after reaching the printer
+            distances_text = f"Individual distances: {distances}"
+            total_distance_text = f"Total distance traveled: {total_distance}"
+
+            distances_surface = font.render(distances_text, True, pygame.Color("black"))
+            total_distance_surface = font.render(
+                total_distance_text, True, pygame.Color("black")
+            )
+
+            screen.blit(
+                distances_surface, (50, WINDOW_HEIGHT - 80)
+            )  # Adjust position as needed
+            screen.blit(
+                total_distance_surface, (50, WINDOW_HEIGHT - 50)
+            )  # Adjust position as needed
+
+            pygame.display.flip()  # Update the display with text
+            time.sleep(5)  # Show the screen with distances for 5 seconds
             pygame.quit()
+            return
         else:
-            time.sleep(0.5)  # Wait half a second to visualize the movement
+            time.sleep(0.3)  # Wait half a second to visualize the movement
 
 
 # Main loop
